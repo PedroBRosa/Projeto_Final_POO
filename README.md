@@ -1,12 +1,4 @@
 # Projeto_Final_POO
-Cod para gerar a tabela no PG
 
+Feito pelos alunos do 3° periodo do curdo de ADS da faculdade Newton Paiva.
 
-create table itens(
-	id bigserial primary key,
-	titulo varchar(50),
-	local varchar(40),
-	observacao varchar(200),
-	status varchar(10),
-	data date
-);
