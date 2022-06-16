@@ -11,6 +11,18 @@ public class Itens {
     private LocalDate dateTime;
     private Status status;
 
+    public Itens() {
+    }
+
+    public Itens(Long id, String titulo, String local, String observacao, LocalDate dateTime, Status status) {
+        this.id = id;
+        this.titulo = titulo;
+        this.local = local;
+        this.observacao = observacao;
+        this.dateTime = dateTime;
+        this.status = status;
+    }
+
     public Long getId() {
         return id;
     }

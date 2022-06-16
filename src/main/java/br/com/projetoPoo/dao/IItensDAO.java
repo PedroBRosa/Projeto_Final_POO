@@ -9,8 +9,11 @@ public interface IItensDAO {
     Itens save(Itens itens);
     Itens update(Itens itens);
     void delete(Long id);
-    List<Itens> findAll();
+    List <Itens> findAll();
+    String findBytitulo(String itens);
+
     Optional<Itens> findById(Long id);
+
     List<Itens> findByStatus(Status status);
 
 }

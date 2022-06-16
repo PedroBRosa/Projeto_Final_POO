@@ -68,6 +68,7 @@ public class Cadastro extends JFrame {
                 dataTF.setText("");
                 localTF.setText("");
                 JOptionPane.showMessageDialog(null,"Salvo Com Sucesso!");
+
             }
         });
         cancelarButton.addActionListener(new ActionListener() {

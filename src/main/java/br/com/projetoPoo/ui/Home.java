@@ -40,6 +40,29 @@ public class Home extends JFrame{
                 }
             }
         });
+        procurarItemButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    BuscaTitulo buscaTitulo = new BuscaTitulo();
+                    buscaTitulo.build();
+                } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+        listarItensButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                   ListarTodos listarTodos = new ListarTodos();
+                   listarTodos.build();
+                } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
     }
+
 
 }

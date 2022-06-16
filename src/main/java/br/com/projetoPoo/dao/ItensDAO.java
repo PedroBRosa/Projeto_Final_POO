@@ -6,7 +6,10 @@ import br.com.projetoPoo.model.Status;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,10 +21,10 @@ public class ItensDAO implements IItensDAO {
             String sql = "INSERT INTO itens(titulo, local, observacao, status, data) VALUES (?,?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, itens.getTitulo());
-            preparedStatement.setString(2,itens.getLocal());
-            preparedStatement.setString(3,itens.getObservacao());
+            preparedStatement.setString(2, itens.getLocal());
+            preparedStatement.setString(3, itens.getObservacao());
             preparedStatement.setString(4, itens.getStatus().toString());
-            preparedStatement.setDate(5,java.sql.Date.valueOf(itens.getDateTime()));
+            preparedStatement.setDate(5, java.sql.Date.valueOf(itens.getDateTime()));
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
@@ -31,8 +34,10 @@ public class ItensDAO implements IItensDAO {
 
     @Override
     public Itens update(Itens itens) {
-        return null;
+
+        return itens;
     }
+
 
     @Override
     public void delete(Long id) {
@@ -41,16 +46,47 @@ public class ItensDAO implements IItensDAO {
 
     @Override
     public List<Itens> findAll() {
-        return null;
+        String sql = "SELECT id, titulo, local, observacao, status, data FROM itens";
+        List<Itens> itens = new ArrayList<>();
+
+        try (Connection connection = ConnectionFactory.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                Long id = rs.getLong("id");
+                String titulo = rs.getString("titulo");
+                String local = rs.getString("local");
+                String observacao = rs.getString("observacao");
+                Status status = Status.valueOf(rs.getString("status"));
+                LocalDate data = rs.getDate("data").toLocalDate();
+                Itens item = new Itens(id, titulo, local, observacao, data, status);
+                itens.add(item);
+            }
+
+        } catch (SQLException e) {
+
+            throw new RuntimeException(e);
+        }
+
+
+        return itens;
+    }
+
+    @Override
+    public String findBytitulo(String titulo) {
+        return titulo;
     }
 
     @Override
     public Optional<Itens> findById(Long id) {
+
         return Optional.empty();
     }
 
     @Override
     public List<Itens> findByStatus(Status status) {
+
         return null;
     }
 }
