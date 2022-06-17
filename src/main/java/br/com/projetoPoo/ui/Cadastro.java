@@ -23,7 +23,9 @@ public class Cadastro extends JFrame {
     private JEditorPane observacaoTF;
     private JButton salvarButton;
     private JButton cancelarButton;
-
+    private JButton buscarButton;
+    private JButton excluirButton;
+    private JFormattedTextField formattedTextField1;
 
 
     public void build() throws ParseException {

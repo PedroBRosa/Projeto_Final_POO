@@ -16,8 +16,6 @@ public class ListarTodos extends JFrame {
     private JTextArea itensTA;
     private JButton buscarButton;
 
-
-
     public void build() throws ParseException {
         setTitle("Controle de Itens");
         setSize(550,500);

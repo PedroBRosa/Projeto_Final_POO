@@ -83,8 +83,25 @@ public class ItensDAO implements IItensDAO {
 
     @Override
     public Optional<Itens> findById(Long id) {
-
-        return null;
+        String sql = "SELECT * FROM itens WHERE id =" + id;
+        Itens item=null;
+        try (Connection connection = ConnectionFactory.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                Long pKId = rs.getLong("id");
+                String titulo = rs.getString("titulo");
+                String local = rs.getString("local");
+                String observacao = rs.getString("observacao");
+                Status status = Status.valueOf(rs.getString("status"));
+                LocalDate data = rs.getDate("data").toLocalDate();
+                item = new Itens(pKId, titulo, local, observacao, data, status);
+            }
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.ofNullable(item);
     }
 
     @Override
