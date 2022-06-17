@@ -47,8 +47,15 @@ public class ListarTodos extends JFrame {
                            "\nObservação: "+itens.getObservacao()+
                            "\nStatus: "+itens.getStatus()+
                            "\nData: "+itens.getDateTime()+
-                           "\n==============================================\n");
+                           "\n===========================================================\n");
                }
+            }
+        });
+        sairButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+                setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             }
         });
     }

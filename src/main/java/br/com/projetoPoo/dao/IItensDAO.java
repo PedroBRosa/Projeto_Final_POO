@@ -1,4 +1,5 @@
 package br.com.projetoPoo.dao;
+
 import br.com.projetoPoo.model.Itens;
 import br.com.projetoPoo.model.Status;
 
@@ -7,10 +8,14 @@ import java.util.Optional;
 
 public interface IItensDAO {
     Itens save(Itens itens);
+
     Itens update(Itens itens);
+
     void delete(Long id);
-    List <Itens> findAll();
-    String findBytitulo(String itens);
+
+    List<Itens> findAll();
+
+    List<Itens> findTitulo(String it);
 
     Optional<Itens> findById(Long id);
 

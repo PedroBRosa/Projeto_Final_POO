@@ -15,6 +15,29 @@ import java.util.Optional;
 
 public class ItensDAO implements IItensDAO {
 
+
+    private List<Itens> find(String sql) {
+        List<Itens> itens = new ArrayList<>();
+        try (Connection connection = ConnectionFactory.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                Long id = rs.getLong("id");
+                String titulo = rs.getString("titulo");
+                String local = rs.getString("local");
+                String observacao = rs.getString("observacao");
+                Status status = Status.valueOf(rs.getString("status"));
+                LocalDate data = rs.getDate("data").toLocalDate();
+                Itens item = new Itens(id, titulo, local, observacao, data, status);
+                itens.add(item);
+            }
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return itens;
+    }
+
     @Override
     public Itens save(Itens itens) {
         try (Connection connection = ConnectionFactory.getConnection()) {
@@ -46,42 +69,22 @@ public class ItensDAO implements IItensDAO {
 
     @Override
     public List<Itens> findAll() {
-        String sql = "SELECT id, titulo, local, observacao, status, data FROM itens";
-        List<Itens> itens = new ArrayList<>();
-
-        try (Connection connection = ConnectionFactory.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-            ResultSet rs = preparedStatement.executeQuery();
-            while (rs.next()) {
-                Long id = rs.getLong("id");
-                String titulo = rs.getString("titulo");
-                String local = rs.getString("local");
-                String observacao = rs.getString("observacao");
-                Status status = Status.valueOf(rs.getString("status"));
-                LocalDate data = rs.getDate("data").toLocalDate();
-                Itens item = new Itens(id, titulo, local, observacao, data, status);
-                itens.add(item);
-            }
-
-        } catch (SQLException e) {
-
-            throw new RuntimeException(e);
-        }
-
-
-        return itens;
+        String sql = "SELECT * FROM itens";
+        return find(sql);
     }
 
     @Override
-    public String findBytitulo(String titulo) {
-        return titulo;
+    public List<Itens> findTitulo(String it) {
+        it = "'%" + it + "%'";
+        String sql = "SELECT * FROM itens WHERE titulo LIKE" + it;
+        return find(sql);
     }
+
 
     @Override
     public Optional<Itens> findById(Long id) {
 
-        return Optional.empty();
+        return null;
     }
 
     @Override
