@@ -39,7 +39,6 @@ public class BuscaTitulo extends JFrame {
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                buscarButton.getDisabledIcon();
                 buscaTA.setText("");
                 ItensDAO dao = new ItensDAO();
                 if (tituloRadioButton.isSelected()==true) {

@@ -4,10 +4,8 @@ import br.com.projetoPoo.infra.ConnectionFactory;
 import br.com.projetoPoo.model.Itens;
 import br.com.projetoPoo.model.Status;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.swing.*;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +40,18 @@ public class ItensDAO implements IItensDAO {
     public Itens save(Itens itens) {
         try (Connection connection = ConnectionFactory.getConnection()) {
             String sql = "INSERT INTO itens(titulo, local, observacao, status, data) VALUES (?,?,?,?,?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, itens.getTitulo());
             preparedStatement.setString(2, itens.getLocal());
             preparedStatement.setString(3, itens.getObservacao());
             preparedStatement.setString(4, itens.getStatus().toString());
             preparedStatement.setDate(5, java.sql.Date.valueOf(itens.getDateTime()));
             preparedStatement.executeUpdate();
+            ResultSet rs  = preparedStatement.getGeneratedKeys();
+                rs.next();
+                Long newId = rs.getLong("id");
+                System.out.println(newId);
+                itens.setId(newId);
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
@@ -57,19 +60,36 @@ public class ItensDAO implements IItensDAO {
 
     @Override
     public Itens update(Itens itens) {
-
+        try (Connection connection = ConnectionFactory.getConnection()) {
+            String sql = "UPDATE itens SET titulo = ?, local= ?, observacao = ?, status = ?, data = ? WHERE id = ?;";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, itens.getTitulo());
+            preparedStatement.setString(2, itens.getLocal());
+            preparedStatement.setString(3, itens.getObservacao());
+            preparedStatement.setString(4, itens.getStatus().toString());
+            preparedStatement.setDate(5, java.sql.Date.valueOf(itens.getDateTime()));
+            preparedStatement.setLong(6,itens.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
         return itens;
     }
-
-
     @Override
     public void delete(Long id) {
-
+        try (Connection connection = ConnectionFactory.getConnection()) {
+            String sql = "DELETE FROM itens WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
     public List<Itens> findAll() {
-        String sql = "SELECT * FROM itens";
+        String sql = "SELECT * FROM itens ORDER BY id ASC";
         return find(sql);
     }
 

@@ -10,7 +10,6 @@ public class Home extends JFrame{
     private JButton cadastrarItemButton;
     private JButton procurarItemButton;
     private JButton listarItensButton;
-    private JButton alterarExcluirButton;
     private JPanel homePanel;
 
     public void build(){

@@ -11,10 +11,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class Cadastro extends JFrame {
-
-    MaskFormatter formatter = new MaskFormatter("##/##/####");
+    ItensDAO dao = new ItensDAO();
+    MaskFormatter ataFormatter = new MaskFormatter("##/##/####");
     private JPanel cadastroPanel;
     private JFormattedTextField tituloTF;
     private JFormattedTextField localTF;
@@ -22,65 +23,174 @@ public class Cadastro extends JFrame {
     private JComboBox statusSB;
     private JEditorPane observacaoTF;
     private JButton salvarButton;
-    private JButton cancelarButton;
+    private JButton sairButton;
     private JButton buscarButton;
     private JButton excluirButton;
-    private JFormattedTextField formattedTextField1;
+    private JFormattedTextField idFT;
+    private JButton novoButton;
+    private JButton cancelarButton1;
 
 
     public void build() throws ParseException {
+        idFT.setText("");
         setContentPane(cadastroPanel);
         setVisible(true);
         setTitle("Cadastrar Item");
-        setSize(580, 750);
+        setSize(680, 750);
         Toolkit kit = Toolkit.getDefaultToolkit();
         Dimension screen = kit.getScreenSize();
         int width = screen.width;
-        setLocation(width/3,60);
-        formatter.install(dataTF);
+        setLocation(width / 3, 60);
+        ataFormatter.install(dataTF);
+    }
+
+    private void resetCampos() {
+        idFT.setText("");
+        tituloTF.setText("");
+        localTF.setText("");
+        dataTF.setText("");
+        statusSB.setSelectedIndex(0);
+        observacaoTF.setText("");
+        idFT.setEnabled(true);
+        idFT.setEditable(true);
+        tituloTF.setEnabled(false);
+        localTF.setEnabled(false);
+        dataTF.setEnabled(false);
+        statusSB.setEnabled(false);
+        observacaoTF.setEnabled(false);
+        buscarButton.setEnabled(true);
+        salvarButton.setEnabled(false);
+        excluirButton.setEnabled(false);
+        novoButton.setEnabled(true);
     }
 
     public Cadastro() throws ParseException {
+
+        novoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                idFT.setText("0");
+                idFT.setEditable(false);
+                tituloTF.setEnabled(true);
+                localTF.setEnabled(true);
+                dataTF.setEnabled(true);
+                statusSB.setEnabled(true);
+                observacaoTF.setEnabled(true);
+                buscarButton.setEnabled(false);
+                salvarButton.setEnabled(true);
+                excluirButton.setEnabled(false);
+                novoButton.setEnabled(false);
+            }
+        });
         salvarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ItensDAO dao = new ItensDAO();
+                String dataBr=null;
+                int d[] = new int[3];
                 Itens it = new Itens();
-                int ano;
-                int mes;
-                int dia;
-                it.setTitulo(tituloTF.getText());
-                it.setLocal(localTF.getText());
-                if (statusSB.getSelectedIndex()==0){
-                    it.setStatus(Status.PERDIDO);
-                }else{
-                    it.setStatus(Status.ACHADO);
+                int control = Integer.parseInt(idFT.getText());
+                switch (control){
+                    case 0:
+                        it.setTitulo(tituloTF.getText());
+                        it.setLocal(localTF.getText());
+                        if (statusSB.getSelectedIndex()==0){
+                            it.setStatus(Status.PERDIDO);
+                        } else {
+                            it.setStatus(Status.ACHADO);
+                        }
+                        it.setObservacao(observacaoTF.getText());
+                        dataBr = dataTF.getText();
+                        System.out.println(dataBr);
+                        d[0] = Integer.parseInt(dataBr.substring(0, 2));
+                        d[1] = Integer.parseInt(dataBr.substring(3, 5));
+                        d[2] = Integer.parseInt(dataBr.substring(6, 10));
+                        it.setDateTime(LocalDate.of(d[2],d[1],d[0]));
+                        dao.save(it);
+                        JOptionPane.showMessageDialog(null, "Salvo Com Sucesso"+"\nCOM O ID = "+it.getId());
+                        break;
+                    default:
+                        //update
+                        it.setTitulo(tituloTF.getText());
+                        it.setLocal(localTF.getText());
+                        if (statusSB.getSelectedIndex()==0){
+                            it.setStatus(Status.PERDIDO);
+                        } else {
+                            it.setStatus(Status.ACHADO);
+                        }
+                        it.setObservacao(observacaoTF.getText());
+                        dataBr = dataTF.getText();
+                        System.out.println(dataBr);
+                        d[0] = Integer.parseInt(dataBr.substring(0, 2));
+                        d[1] = Integer.parseInt(dataBr.substring(3, 5));
+                        d[2] = Integer.parseInt(dataBr.substring(6, 10));
+                        it.setDateTime(LocalDate.of(d[2],d[1],d[0]));
+                        it.setId(Long.valueOf(idFT.getText()));
+                        dao.update(it);
+                        JOptionPane.showMessageDialog(cadastroPanel, "Registro modificado com sucesso!");
+                        break;
                 }
-                it.setObservacao(observacaoTF.getText());
-                String dataStg = dataTF.getText();
-                String d [] = dataStg.split("/");
-                dia = Integer.parseInt(d[0]);
-                mes = Integer.parseInt(d[1]);
-                ano = Integer.parseInt(d[2]);
-                it.setDateTime(LocalDate.of(ano,mes,dia));
-                dao.save(it);
-                tituloTF.setText("");
-                observacaoTF.setText("");
-                statusSB.setSelectedIndex(0);
-                dataTF.setText("");
-                localTF.setText("");
-                JOptionPane.showMessageDialog(null,"Salvo Com Sucesso!");
+                resetCampos();
 
             }
         });
-        cancelarButton.addActionListener(new ActionListener() {
+        sairButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            setVisible(false);
-            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                setVisible(false);
+                setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            }
+        });
+        buscarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String d[] = new String[3];
+                idFT.setEnabled(false);
+
+                try {
+                    Optional<Itens> itens1 = dao.findById(Long.valueOf(idFT.getText()));
+                    itens1.ifPresent(itens -> {
+                        String dataBr = String.valueOf(itens.getDateTime());
+                        d[0] = dataBr.substring(8, 10);
+                        d[1] = dataBr.substring(5, 7);
+                        d[2] = dataBr.substring(0, 4);
+                        tituloTF.setText(itens.getTitulo());
+                        localTF.setText(itens.getLocal());
+                        if (itens.getStatus() == Status.ACHADO) {
+                            statusSB.setSelectedIndex(1);
+                        } else {
+                            statusSB.setSelectedIndex(0);
+                        }
+                        dataTF.setText(d[0] + d[1] + d[2]);
+                        observacaoTF.setText(itens.getObservacao());
+                    });
+                    excluirButton.setEnabled(true);
+                    salvarButton.setEnabled(true);
+                    novoButton.setEnabled(false);
+                    idFT.setEnabled(false);
+                    tituloTF.setEnabled(true);
+                    localTF.setEnabled(true);
+                    statusSB.setEnabled(true);
+                    dataTF.setEnabled(true);
+                    observacaoTF.setEnabled(true);
+                } catch (Exception e1) {
+                    JOptionPane.showMessageDialog(cadastroPanel, "Escreva um ID");
+                    resetCampos();
+                }
+            }
+        });
+        cancelarButton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resetCampos();
+            }
+        });
+        excluirButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dao.delete(Long.valueOf(idFT.getText()));
+                JOptionPane.showMessageDialog(cadastroPanel,"Registro deletado com sucesso!");
+                resetCampos();
             }
         });
     }
-
-
 }
