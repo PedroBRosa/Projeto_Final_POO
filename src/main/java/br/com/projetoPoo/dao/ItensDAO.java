@@ -4,7 +4,6 @@ import br.com.projetoPoo.infra.ConnectionFactory;
 import br.com.projetoPoo.model.Itens;
 import br.com.projetoPoo.model.Status;
 
-import javax.swing.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ public class ItensDAO implements IItensDAO {
     }
 
     @Override
-    public Itens save(Itens itens) {
+    public void save(Itens itens) {
         try (Connection connection = ConnectionFactory.getConnection()) {
             String sql = "INSERT INTO itens(titulo, local, observacao, status, data) VALUES (?,?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -50,16 +49,14 @@ public class ItensDAO implements IItensDAO {
             ResultSet rs  = preparedStatement.getGeneratedKeys();
                 rs.next();
                 Long newId = rs.getLong("id");
-                System.out.println(newId);
                 itens.setId(newId);
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
-        return itens;
     }
 
     @Override
-    public Itens update(Itens itens) {
+    public void update(Itens itens) {
         try (Connection connection = ConnectionFactory.getConnection()) {
             String sql = "UPDATE itens SET titulo = ?, local= ?, observacao = ?, status = ?, data = ? WHERE id = ?;";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -73,7 +70,6 @@ public class ItensDAO implements IItensDAO {
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
-        return itens;
     }
     @Override
     public void delete(Long id) {

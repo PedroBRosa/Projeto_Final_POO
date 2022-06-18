@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IItensDAO {
-    Itens save(Itens itens);
+    void save(Itens itens);
 
-    Itens update(Itens itens);
+    void update(Itens itens);
 
     void delete(Long id);
 

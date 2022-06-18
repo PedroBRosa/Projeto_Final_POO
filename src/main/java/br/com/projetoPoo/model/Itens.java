@@ -1,7 +1,6 @@
 package br.com.projetoPoo.model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class Itens {
     private Long id;
