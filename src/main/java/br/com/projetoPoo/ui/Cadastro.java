@@ -85,49 +85,45 @@ public class Cadastro extends JFrame {
         salvarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String dataBr=null;
+                String dataBr;
                 int d[] = new int[3];
                 Itens it = new Itens();
                 int control = Integer.parseInt(idFT.getText());
-                switch (control){
-                    case 0:
-                        it.setTitulo(tituloTF.getText());
-                        it.setLocal(localTF.getText());
-                        if (statusSB.getSelectedIndex()==0){
-                            it.setStatus(Status.PERDIDO);
-                        } else {
-                            it.setStatus(Status.ACHADO);
-                        }
-                        it.setObservacao(observacaoTF.getText());
-                        dataBr = dataTF.getText();
-                        System.out.println(dataBr);
-                        d[0] = Integer.parseInt(dataBr.substring(0, 2));
-                        d[1] = Integer.parseInt(dataBr.substring(3, 5));
-                        d[2] = Integer.parseInt(dataBr.substring(6, 10));
-                        it.setDateTime(LocalDate.of(d[2],d[1],d[0]));
-                        dao.save(it);
-                        JOptionPane.showMessageDialog(null, "Salvo Com Sucesso"+"\nCOM O ID = "+it.getId());
-                        break;
-                    default:
-                        //update
-                        it.setTitulo(tituloTF.getText());
-                        it.setLocal(localTF.getText());
-                        if (statusSB.getSelectedIndex()==0){
-                            it.setStatus(Status.PERDIDO);
-                        } else {
-                            it.setStatus(Status.ACHADO);
-                        }
-                        it.setObservacao(observacaoTF.getText());
-                        dataBr = dataTF.getText();
-                        System.out.println(dataBr);
-                        d[0] = Integer.parseInt(dataBr.substring(0, 2));
-                        d[1] = Integer.parseInt(dataBr.substring(3, 5));
-                        d[2] = Integer.parseInt(dataBr.substring(6, 10));
-                        it.setDateTime(LocalDate.of(d[2],d[1],d[0]));
-                        it.setId(Long.valueOf(idFT.getText()));
-                        dao.update(it);
-                        JOptionPane.showMessageDialog(cadastroPanel, "Registro modificado com sucesso!");
-                        break;
+                if (control == 0) {
+                    it.setTitulo(tituloTF.getText());
+                    it.setLocal(localTF.getText());
+                    if (statusSB.getSelectedIndex() == 0) {
+                        it.setStatus(Status.PERDIDO);
+                    } else {
+                        it.setStatus(Status.ACHADO);
+                    }
+                    it.setObservacao(observacaoTF.getText());
+                    dataBr = dataTF.getText();
+                    System.out.println(dataBr);
+                    d[0] = Integer.parseInt(dataBr.substring(0, 2));
+                    d[1] = Integer.parseInt(dataBr.substring(3, 5));
+                    d[2] = Integer.parseInt(dataBr.substring(6, 10));
+                    it.setDateTime(LocalDate.of(d[2], d[1], d[0]));
+                    dao.save(it);
+                    JOptionPane.showMessageDialog(null, "Salvo Com Sucesso" + "\nCOM O ID = " + it.getId());
+                } else {//update
+                    it.setTitulo(tituloTF.getText());
+                    it.setLocal(localTF.getText());
+                    if (statusSB.getSelectedIndex() == 0) {
+                        it.setStatus(Status.PERDIDO);
+                    } else {
+                        it.setStatus(Status.ACHADO);
+                    }
+                    it.setObservacao(observacaoTF.getText());
+                    dataBr = dataTF.getText();
+                    System.out.println(dataBr);
+                    d[0] = Integer.parseInt(dataBr.substring(0, 2));
+                    d[1] = Integer.parseInt(dataBr.substring(3, 5));
+                    d[2] = Integer.parseInt(dataBr.substring(6, 10));
+                    it.setDateTime(LocalDate.of(d[2], d[1], d[0]));
+                    it.setId(Long.valueOf(idFT.getText()));
+                    dao.update(it);
+                    JOptionPane.showMessageDialog(cadastroPanel, "Registro modificado com sucesso!");
                 }
                 resetCampos();
 
@@ -143,7 +139,7 @@ public class Cadastro extends JFrame {
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String d[] = new String[3];
+                String[] d = new String[3];
                 idFT.setEnabled(false);
 
                 try {
