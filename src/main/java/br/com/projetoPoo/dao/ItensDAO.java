@@ -125,7 +125,19 @@ public class ItensDAO implements IItensDAO {
 
     @Override
     public List<Itens> findByStatus(Status status) {
+        String sql = "SELECT * FROM itens WHERE status LIKE '"+status+"'" ;
+        return find(sql);
+    }
 
-        return null;
+    @Override
+    public List<Itens> findDate(int i) {
+        String sql;
+        if(i==0){
+            sql = "SELECT * FROM itens ORDER BY data ASC";
+            return find(sql);
+        }else {
+            sql = "SELECT * FROM itens ORDER BY data DESC";
+            return find(sql);
+        }
     }
 }
