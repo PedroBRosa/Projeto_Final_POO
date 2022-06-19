@@ -36,7 +36,6 @@ public class BuscaTitulo extends JFrame {
                 "\n===========================================================\n");
     }
 
-
     public void build() throws ParseException {
         setTitle("Controle de Itens");
         setSize(550, 500);
@@ -44,7 +43,6 @@ public class BuscaTitulo extends JFrame {
         Toolkit kit = Toolkit.getDefaultToolkit();
         Dimension screen = kit.getScreenSize();
         int width = screen.width;
-        int height = screen.height;
         setLocation(width / 3, 200);
         setVisible(true);
     }
@@ -53,73 +51,47 @@ public class BuscaTitulo extends JFrame {
     public BuscaTitulo() {
 
 
-        buscarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buscaTA.setText("");
-                ItensDAO dao = new ItensDAO();
-                if (tituloRadioButton.isSelected() == true) {
-                    buscarButton.isEnabled();
-                    List<Itens> itens1 = dao.findTitulo(tituloTf.getText());
+        buscarButton.addActionListener(e -> {
+            buscaTA.setText("");
+            ItensDAO dao = new ItensDAO();
+            if (tituloRadioButton.isSelected()) {
+                buscarButton.isEnabled();
+                List<Itens> itens1 = dao.findTitulo(tituloTf.getText());
+                if (itens1.isEmpty()) {
+                    JOptionPane.showMessageDialog(buscaTituloPanel, "Registro inexistente");
+                    tituloTf.setText("");
+                }
+                for (Itens itens : itens1) {
+                    printAll(itens);
+                }
+
+            } else if (IDRadioButton.isSelected()) {
+                buscarButton.isEnabled();
+                try {
+                    Optional<Itens> itens1 = dao.findById(Long.valueOf(tituloTf.getText()));
                     if (itens1.isEmpty()) {
                         JOptionPane.showMessageDialog(buscaTituloPanel, "Registro inexistente");
                         tituloTf.setText("");
                     }
-                    for (Itens itens : itens1) {
-                        printAll(itens);
-                    }
-
-                } else if (IDRadioButton.isSelected() == true) {
-                    buscarButton.isEnabled();
-                    try {
-                        Optional<Itens> itens1 = dao.findById(Long.valueOf(tituloTf.getText()));
-                        if (itens1.isEmpty()) {
-                            JOptionPane.showMessageDialog(buscaTituloPanel, "Registro inexistente");
-                            tituloTf.setText("");
-                        }
-                        itens1.ifPresent(itens -> {
-                            printAll(itens);
-                        });
-                    }
-                    catch (Exception exception){
-                        JOptionPane.showMessageDialog(buscaTituloPanel, "Por favor, escreva\num ID válido!");
-                        tituloTf.setText("");
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(buscaTituloPanel, "Por favor, selecione\numa opção de busca!");
+                    itens1.ifPresent(this::printAll);
                 }
-            }
-        });
-
-        cancelarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-                setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            }
-        });
-
-        IDRadioButton.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (IDRadioButton.isSelected()) {
-                    tituloRadioButton.setEnabled(false);
-                } else {
-                    tituloRadioButton.setEnabled(true);
+                catch (Exception exception){
+                    JOptionPane.showMessageDialog(buscaTituloPanel, "Por favor, escreva\num ID válido!");
+                    tituloTf.setText("");
                 }
+            } else {
+                JOptionPane.showMessageDialog(buscaTituloPanel, "Por favor, selecione\numa opção de busca!");
             }
         });
 
-        tituloRadioButton.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (tituloRadioButton.isSelected()) {
-                    IDRadioButton.setEnabled(false);
-                } else {
-                    IDRadioButton.setEnabled(true);
-                }
-            }
+        cancelarButton.addActionListener(e -> {
+            setVisible(false);
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         });
+
+        IDRadioButton.addItemListener(e -> tituloRadioButton.setEnabled(!IDRadioButton.isSelected()));
+
+        tituloRadioButton.addItemListener(e -> IDRadioButton.setEnabled(!tituloRadioButton.isSelected()));
     }
 
 }
