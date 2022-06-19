@@ -19,6 +19,16 @@ public class BuscaTitulo extends JFrame {
     private JRadioButton IDRadioButton;
     private JRadioButton tituloRadioButton;
 
+    private void printAll(Itens itens) {
+        buscaTA.append("ID: " + itens.getId() +
+                "\nTitulo: " + itens.getTitulo() +
+                "\nLocal: " + itens.getLocal() +
+                "\nObservação: " + itens.getObservacao() +
+                "\nStatus: " + itens.getStatus() +
+                "\nData: " + itens.getDateTime() +
+                "\n===========================================================\n");
+    }
+
 
     public void build() throws ParseException {
         setTitle("Controle de Itens");
@@ -41,34 +51,37 @@ public class BuscaTitulo extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 buscaTA.setText("");
                 ItensDAO dao = new ItensDAO();
-                if (tituloRadioButton.isSelected()==true) {
+                if (tituloRadioButton.isSelected() == true) {
                     buscarButton.isEnabled();
                     List<Itens> itens1 = dao.findTitulo(tituloTf.getText());
-                    for (Itens itens : itens1) {
-                        buscaTA.append("ID: " + itens.getId() +
-                                "\nTitulo: " + itens.getTitulo() +
-                                "\nLocal: " + itens.getLocal() +
-                                "\nObservação: " + itens.getObservacao() +
-                                "\nStatus: " + itens.getStatus() +
-                                "\nData: " + itens.getDateTime() +
-                                "\n===========================================================\n");
+                    if (itens1.isEmpty()) {
+                        JOptionPane.showMessageDialog(buscaTituloPanel, "Registro inexistente");
+                        tituloTf.setText("");
                     }
-                } else if (IDRadioButton.isSelected()==true) {
+                    for (Itens itens : itens1) {
+                        printAll(itens);
+                    }
+
+                } else if (IDRadioButton.isSelected() == true) {
                     buscarButton.isEnabled();
-                    Optional<Itens> itens1 = dao.findById(Long.valueOf(tituloTf.getText()));
-                    itens1.ifPresent(itens ->{
-                        buscaTA.append("ID: " + itens.getId() +
-                                "\nTitulo: " + itens.getTitulo() +
-                                "\nLocal: " + itens.getLocal() +
-                                "\nObservação: " + itens.getObservacao() +
-                                "\nStatus: " + itens.getStatus() +
-                                "\nData: " + itens.getDateTime() +
-                                "\n===========================================================\n");
-                    });
-                    }else{
-                    JOptionPane.showMessageDialog(buscaTituloPanel,"Por favor, selecione\numa opção de busca!");
+                    try {
+                        Optional<Itens> itens1 = dao.findById(Long.valueOf(tituloTf.getText()));
+                        if (itens1.isEmpty()) {
+                            JOptionPane.showMessageDialog(buscaTituloPanel, "Registro inexistente");
+                            tituloTf.setText("");
+                        }
+                        itens1.ifPresent(itens -> {
+                            printAll(itens);
+                        });
+                    }
+                    catch (Exception exception){
+                        JOptionPane.showMessageDialog(buscaTituloPanel, "Por favor, escreva\num ID válido!");
+                        tituloTf.setText("");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(buscaTituloPanel, "Por favor, selecione\numa opção de busca!");
                 }
-                }
+            }
         });
 
         cancelarButton.addActionListener(new ActionListener() {
