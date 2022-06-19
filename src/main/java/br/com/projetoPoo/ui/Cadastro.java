@@ -82,21 +82,26 @@ public class Cadastro extends JFrame {
 
             if (control == 0) {
                 //INSERT
-                it.setTitulo(tituloTF.getText());
-                it.setLocal(localTF.getText());
-                if (statusSB.getSelectedIndex() == 0) {
-                    it.setStatus(Status.PERDIDO);
-                } else {
-                    it.setStatus(Status.ACHADO);
+                try {
+                    it.setTitulo(tituloTF.getText());
+                    it.setLocal(localTF.getText());
+                    if (statusSB.getSelectedIndex() == 0) {
+                        it.setStatus(Status.PERDIDO);
+                    } else {
+                        it.setStatus(Status.ACHADO);
+                    }
+                    it.setObservacao(observacaoTF.getText());
+                    dataBr = dataTF.getText();
+                    d[0] = Integer.parseInt(dataBr.substring(0, 2));
+                    d[1] = Integer.parseInt(dataBr.substring(3, 5));
+                    d[2] = Integer.parseInt(dataBr.substring(6, 10));
+                    it.setDateTime(LocalDate.of(d[2], d[1], d[0]));
+                    dao.save(it);
+                    JOptionPane.showMessageDialog(cadastroPanel, "Salvo Com Sucesso" + "\nCOM O ID = " + it.getId());
+                }catch (Exception exception){
+                    JOptionPane.showMessageDialog(cadastroPanel, "Dado invalido\n Verifique as entradas.");
                 }
-                it.setObservacao(observacaoTF.getText());
-                dataBr = dataTF.getText();
-                d[0] = Integer.parseInt(dataBr.substring(0, 2));
-                d[1] = Integer.parseInt(dataBr.substring(3, 5));
-                d[2] = Integer.parseInt(dataBr.substring(6, 10));
-                it.setDateTime(LocalDate.of(d[2], d[1], d[0]));
-                dao.save(it);
-                JOptionPane.showMessageDialog(cadastroPanel, "Salvo Com Sucesso" + "\nCOM O ID = " + it.getId());
+
             } else {
                 //update
                 it.setTitulo(tituloTF.getText());
@@ -129,6 +134,11 @@ public class Cadastro extends JFrame {
 
             try {
                 Optional<Itens> itens1 = dao.findById(Long.valueOf(idFT.getText()));
+                if (itens1.isEmpty()) {
+                    JOptionPane.showMessageDialog(cadastroPanel, "Registro inexistente");
+                    idFT.setText("");
+                    resetCampos();
+                }
                 itens1.ifPresent(itens -> {
                     String dataBr = String.valueOf(itens.getDateTime());
                     d[0] = dataBr.substring(8, 10);
@@ -143,18 +153,18 @@ public class Cadastro extends JFrame {
                     }
                     dataTF.setText(d[0] + d[1] + d[2]);
                     observacaoTF.setText(itens.getObservacao());
+                    excluirButton.setEnabled(true);
+                    salvarButton.setEnabled(true);
+                    novoButton.setEnabled(false);
+                    idFT.setEnabled(false);
+                    tituloTF.setEnabled(true);
+                    localTF.setEnabled(true);
+                    statusSB.setEnabled(true);
+                    dataTF.setEnabled(true);
+                    observacaoTF.setEnabled(true);
                 });
-                excluirButton.setEnabled(true);
-                salvarButton.setEnabled(true);
-                novoButton.setEnabled(false);
-                idFT.setEnabled(false);
-                tituloTF.setEnabled(true);
-                localTF.setEnabled(true);
-                statusSB.setEnabled(true);
-                dataTF.setEnabled(true);
-                observacaoTF.setEnabled(true);
             } catch (Exception e1) {
-                JOptionPane.showMessageDialog(cadastroPanel, "Escreva um ID");
+                JOptionPane.showMessageDialog(cadastroPanel, "Escreva um ID Válido");
                 resetCampos();
             }
         });

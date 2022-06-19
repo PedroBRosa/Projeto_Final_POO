@@ -20,12 +20,19 @@ public class BuscaTitulo extends JFrame {
     private JRadioButton tituloRadioButton;
 
     private void printAll(Itens itens) {
+        String dataBr;
+        String[] d = new String[3];
+        dataBr = String.valueOf(itens.getDateTime());
+        d[0] = dataBr.substring(8, 10);
+        d[1] = dataBr.substring(5, 7);
+        d[2] = dataBr.substring(0, 4);
+
         buscaTA.append("ID: " + itens.getId() +
                 "\nTitulo: " + itens.getTitulo() +
                 "\nLocal: " + itens.getLocal() +
                 "\nObservação: " + itens.getObservacao() +
                 "\nStatus: " + itens.getStatus() +
-                "\nData: " + itens.getDateTime() +
+                "\nData: " + d[0] + "/" + d[1] + "/" + d[2] +
                 "\n===========================================================\n");
     }
 

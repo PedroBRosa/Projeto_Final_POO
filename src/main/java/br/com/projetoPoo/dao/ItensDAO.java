@@ -4,6 +4,7 @@ import br.com.projetoPoo.infra.ConnectionFactory;
 import br.com.projetoPoo.model.Itens;
 import br.com.projetoPoo.model.Status;
 
+import javax.swing.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
