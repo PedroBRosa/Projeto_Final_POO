@@ -64,19 +64,16 @@ public class ListarTodos extends JFrame {
             } else if (statusRB.isSelected()) {
                 if (statusBox.getSelectedIndex() == 0) {
                     itens1 = dao.findByStatus(Status.PERDIDO);
-
                     for (Itens itens : itens1) {
                         printAll(itens);
                     }
                 } else {
                     itens1 = dao.findByStatus(Status.ACHADO);
-
                     for (Itens itens : itens1) {
                         printAll(itens);
                     }
                 }
             } else if (dataRB.isSelected()) {
-
                 itens1 = dao.findDate(dataBox.getSelectedIndex());
                 for (Itens itens : itens1) {
                     printAll(itens);
@@ -86,12 +83,10 @@ public class ListarTodos extends JFrame {
             }
 
         });
-
         sairButton.addActionListener(e -> {
             setVisible(false);
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         });
-
         statusRB.addItemListener(e -> {
             if (statusRB.isSelected()) {
                 dataRB.setEnabled(false);

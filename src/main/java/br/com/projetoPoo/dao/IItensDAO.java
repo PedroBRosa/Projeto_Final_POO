@@ -22,5 +22,4 @@ public interface IItensDAO {
     List<Itens> findByStatus(Status status);
 
     List<Itens> findDate(int i);
-
 }

@@ -99,7 +99,6 @@ public class ItensDAO implements IItensDAO {
         return find(sql);
     }
 
-
     @Override
     public Optional<Itens> findById(Long id) {
         String sql = "SELECT * FROM itens WHERE id =" + id;

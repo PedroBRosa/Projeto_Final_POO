@@ -33,7 +33,7 @@ public class Cadastro extends JFrame {
         idFT.setText("");
         setContentPane(cadastroPanel);
         setVisible(true);
-        setTitle("Cadastrar Item");
+        setTitle("Registro De Itens");
         setSize(680, 750);
         Toolkit kit = Toolkit.getDefaultToolkit();
         Dimension screen = kit.getScreenSize();
@@ -79,7 +79,6 @@ public class Cadastro extends JFrame {
             int[] d = new int[3];
             Itens it = new Itens();
             int control = Integer.parseInt(idFT.getText());
-
             if (control == 0) {
                 //INSERT
                 try {
@@ -104,25 +103,28 @@ public class Cadastro extends JFrame {
 
             } else {
                 //update
-                it.setTitulo(tituloTF.getText());
-                it.setLocal(localTF.getText());
-                if (statusSB.getSelectedIndex() == 0) {
-                    it.setStatus(Status.PERDIDO);
-                } else {
-                    it.setStatus(Status.ACHADO);
+                try{
+                    it.setTitulo(tituloTF.getText());
+                    it.setLocal(localTF.getText());
+                    if (statusSB.getSelectedIndex() == 0) {
+                        it.setStatus(Status.PERDIDO);
+                    } else {
+                        it.setStatus(Status.ACHADO);
+                    }
+                    it.setObservacao(observacaoTF.getText());
+                    dataBr = dataTF.getText();
+                    d[0] = Integer.parseInt(dataBr.substring(0, 2));
+                    d[1] = Integer.parseInt(dataBr.substring(3, 5));
+                    d[2] = Integer.parseInt(dataBr.substring(6, 10));
+                    it.setDateTime(LocalDate.of(d[2], d[1], d[0]));
+                    it.setId(Long.valueOf(idFT.getText()));
+                    dao.update(it);
+                    JOptionPane.showMessageDialog(cadastroPanel, "Registro modificado com sucesso!");
+                }catch (Exception exception){
+                    JOptionPane.showMessageDialog(cadastroPanel, "Dado invalido\n Verifique as entradas.");
                 }
-                it.setObservacao(observacaoTF.getText());
-                dataBr = dataTF.getText();
-                d[0] = Integer.parseInt(dataBr.substring(0, 2));
-                d[1] = Integer.parseInt(dataBr.substring(3, 5));
-                d[2] = Integer.parseInt(dataBr.substring(6, 10));
-                it.setDateTime(LocalDate.of(d[2], d[1], d[0]));
-                it.setId(Long.valueOf(idFT.getText()));
-                dao.update(it);
-                JOptionPane.showMessageDialog(cadastroPanel, "Registro modificado com sucesso!");
             }
             resetCampos();
-
         });
         sairButton.addActionListener(e -> {
             setVisible(false);
@@ -131,12 +133,10 @@ public class Cadastro extends JFrame {
         buscarButton.addActionListener(e -> {
             String[] d = new String[3];
             idFT.setEnabled(false);
-
             try {
                 Optional<Itens> itens1 = dao.findById(Long.valueOf(idFT.getText()));
                 if (itens1.isEmpty()) {
                     JOptionPane.showMessageDialog(cadastroPanel, "Registro inexistente");
-                    idFT.setText("");
                     resetCampos();
                 }
                 itens1.ifPresent(itens -> {
