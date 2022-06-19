@@ -12,7 +12,6 @@ import java.util.Optional;
 
 public class ItensDAO implements IItensDAO {
 
-
     private List<Itens> find(String sql) {
         List<Itens> itens = new ArrayList<>();
         try (Connection connection = ConnectionFactory.getConnection()) {
@@ -50,6 +49,7 @@ public class ItensDAO implements IItensDAO {
                 rs.next();
                 Long newId = rs.getLong("id");
                 itens.setId(newId);
+            preparedStatement.close();
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
@@ -67,6 +67,7 @@ public class ItensDAO implements IItensDAO {
             preparedStatement.setDate(5, java.sql.Date.valueOf(itens.getDateTime()));
             preparedStatement.setLong(6,itens.getId());
             preparedStatement.executeUpdate();
+            preparedStatement.close();
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
@@ -78,6 +79,7 @@ public class ItensDAO implements IItensDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
+            preparedStatement.close();
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }

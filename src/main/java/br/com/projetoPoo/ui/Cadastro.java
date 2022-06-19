@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class Cadastro extends JFrame {
     ItensDAO dao = new ItensDAO();
-    MaskFormatter ataFormatter = new MaskFormatter("##/##/####");
+    MaskFormatter dataFormatter = new MaskFormatter("##/##/####");
     private JPanel cadastroPanel;
     private JFormattedTextField tituloTF;
     private JFormattedTextField localTF;
@@ -39,7 +39,7 @@ public class Cadastro extends JFrame {
         Dimension screen = kit.getScreenSize();
         int width = screen.width;
         setLocation(width / 3, 60);
-        ataFormatter.install(dataTF);
+        dataFormatter.install(dataTF);
     }
     private void resetCampos() {
         idFT.setText("");
@@ -79,7 +79,9 @@ public class Cadastro extends JFrame {
             int[] d = new int[3];
             Itens it = new Itens();
             int control = Integer.parseInt(idFT.getText());
+
             if (control == 0) {
+                //INSERT
                 it.setTitulo(tituloTF.getText());
                 it.setLocal(localTF.getText());
                 if (statusSB.getSelectedIndex() == 0) {
@@ -94,8 +96,9 @@ public class Cadastro extends JFrame {
                 d[2] = Integer.parseInt(dataBr.substring(6, 10));
                 it.setDateTime(LocalDate.of(d[2], d[1], d[0]));
                 dao.save(it);
-                JOptionPane.showMessageDialog(null, "Salvo Com Sucesso" + "\nCOM O ID = " + it.getId());
-            } else {//update
+                JOptionPane.showMessageDialog(cadastroPanel, "Salvo Com Sucesso" + "\nCOM O ID = " + it.getId());
+            } else {
+                //update
                 it.setTitulo(tituloTF.getText());
                 it.setLocal(localTF.getText());
                 if (statusSB.getSelectedIndex() == 0) {

@@ -2,8 +2,6 @@ package br.com.projetoPoo.ui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.ParseException;
 
 public class Home extends JFrame{
@@ -28,37 +26,28 @@ public class Home extends JFrame{
 
 
     public Home() {
-        cadastrarItemButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    Cadastro cadastro = new Cadastro();
-                    cadastro.build();
-                } catch (ParseException ex) {
-                    throw new RuntimeException(ex);
-                }
+        cadastrarItemButton.addActionListener(e -> {
+            try {
+                Cadastro cadastro = new Cadastro();
+                cadastro.build();
+            } catch (ParseException ex) {
+                throw new RuntimeException(ex);
             }
         });
-        procurarItemButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    BuscaTitulo buscaTitulo = new BuscaTitulo();
-                    buscaTitulo.build();
-                } catch (ParseException ex) {
-                    throw new RuntimeException(ex);
-                }
+        procurarItemButton.addActionListener(e -> {
+            try {
+                BuscaTitulo buscaTitulo = new BuscaTitulo();
+                buscaTitulo.build();
+            } catch (ParseException ex) {
+                throw new RuntimeException(ex);
             }
         });
-        listarItensButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                   ListarTodos listarTodos = new ListarTodos();
-                   listarTodos.build();
-                } catch (ParseException ex) {
-                    throw new RuntimeException(ex);
-                }
+        listarItensButton.addActionListener(e -> {
+            try {
+               ListarTodos listarTodos = new ListarTodos();
+               listarTodos.build();
+            } catch (ParseException ex) {
+                throw new RuntimeException(ex);
             }
         });
     }
